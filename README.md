@@ -1,21 +1,21 @@
-h1. jQuery Pushup
+# jQuery Pushup
 
 jQuery pushup is a direct port of "pushup":http://pushuptheweb.com/ by "Nick Stakenburg":http://www.nickstakenburg.com/. It's designed to use the built in features of jQuery to reduce file-size + unneeded duplication of functions (prototype opacity Vs. jQuery fade). 
 
-h3. Installation
+## Installation
 
 Download the jQuery pushup and place CSS, JS and images where needed. If you use a different file structure than the on provided than make sure you change the image URL in @jquery.pushup.js@.
 
 *DO _NOT_ rename jquery.pushup.js, it's file name is used inside the script.*
 
-h3. Changes between original
+## Changes between original
 
 There are quite a few small diferences between this script and the original "pushup.js":http://pushuptheweb.com/
 
 * Uses jQuery - duh; but this means smaller file, and easier to read.
 * Allows for changing min browser, want FireFox 2 uesrs to upgrade to 3? Just change @jQuery.pushup.browsers@.
 
-h3. Options
+## Options
 
 To change the options open up @js/jquery.pushup.js@ where the beginning of the file will have some options you can change.
 
@@ -27,7 +27,7 @@ To change the options open up @js/jquery.pushup.js@ where the beginning of the f
 * @reminder.message@: The reminder message, @#{hours}@ will be replaced by reminder.hours.
 * *Bonus* @jQuery.pushup.browsers@ is an easier way to change minimum browser versions.
 
-h3. Functions
+## Functions
 
 * @jQuery.pushup.init()@: This is called on document load, it tests to see if a pushup message should be shown and if so then shows one.
 * @jQuery.pushup.show([browser, options])@: Shows the pushup message, you can overwrite the browser shown by using the @browser: String@ parameter.
@@ -35,11 +35,11 @@ h3. Functions
 * @jQuery.pushup.setReminder(hours)@: Set a cookie that prevents pushup from showing for @hours@ amount of time.
 * @jQuery.pushup.resetReminder()@: Resets the reminder time so that Pushup will show up on the next visit, if required.
 
-h3. More:
+## More:
 
 If you don't want to have the @jQuery.pushup.init()@ called on DOM ready then remove it from the bottom of @jquery.pushup.js@.
 
-h3. TODO:
+## TODO:
 
  * Refactor more and reduce bloat.
  * Setup options for @show()@
