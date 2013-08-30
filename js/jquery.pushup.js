@@ -6,12 +6,11 @@
  *
  * License: MIT-style license.
  * Website: http://www.pushuptheweb.com
- *
+ * Modified for jQuery by Stuart Loxton (www.stuartloxton.com)
+ * Modified for chrome version detection by Chris Keen (zedd45 at github)
+ *   - TODO: refactor has.js / $.support for feature detection vs browser sniffing
  */
 
-/* 
- * Modified for jQuery by Stuart Loxton (www.stuartloxton.com)
-*/
 
 (function ($) {
     // Cookie plugin based on the work of Peter-Paul Koch - http://www.quirksmode.org
@@ -46,14 +45,14 @@
     };
 
     $.pushup = {
-	    Version: '1.0.3',
+	    Version: '1.1.0',
 	    options: {
 		    appearDelay: 0.5,
 		    fadeDelay: 6,
 		    images: '../images/pushup/',
 		    message: 'Important browser update available',
 		    reminder: {
-			    hours: 6,
+			    hours: 8,
 			    message: 'Remind me again in #{hours}'
 		    }
 	    },
@@ -62,19 +61,22 @@
 		    IE: 'http://www.microsoft.com/windows/downloads/ie/',
 		    Firefox: 'http://www.getfirefox.com',
 		    Safari: 'http://www.apple.com/safari/download/',
-		    Opera: 'http://www.opera.com/download/'
+		    Opera: 'http://www.opera.com/download/',
+			Chrome: 'http://www.google.com/chrome'
 	    },
 	    browsVer: {
-		    Firefox: (navigator.userAgent.indexOf('Firefox') > -1) ? parseFloat(navigator.userAgent.match(/Firefox[\/\s](\d+)/)[1]) : false,
+		    Firefox: ($.browser.mozilla) || (navigator.userAgent.indexOf('Firefox') != -1) ? parseFloat($.browser.version) || parseFloat(navigator.userAgent.match(/Firefox[\/\s](\d+)/)[1]) : false,
 		    IE: ($.browser.msie) ? parseFloat($.browser.version) : false,
 		    Safari: ($.browser.safari) ? parseFloat($.browser.version) : false,
-		    Opera: ($.browser.opera) ? parseFloat($.browser.version) : false
+		    Opera: ($.browser.opera) ? parseFloat($.browser.version) : false,
+		    Chrome: ($.browser.chrome) ? parseFloat($.browser.version) : false
 	    },
 	    browsers: {
 		    Firefox: 3,
-		    IE: 7,
-		    Opera: 9.5,
-		    Safari: 3
+		    IE: 9,
+		    Opera: 15,
+		    Safari: 5,
+			Chrome: 20
 	    },
 	    init: function () {
 		    $.each($.pushup.browsVer, function (i, browserVersion) {
@@ -91,6 +93,7 @@
 	    },
 	    show: function () {
 	        var $elm, $icon, $message, $messageLink, hours, H, messageText, $hourElem, imgSrc, srcFol, image, styles, time;
+		    
 		    $elm = $(document.createElement('div'))
 		        .attr('id', 'pushup')
 		        .hide()
@@ -168,7 +171,9 @@
         Cookie.set(test, 'test', { duration: 15 });
         return Cookie.get(test);
     }('_pushupCookiesEnabled'));
-    $(function () {
+   
+	$(function () {
         $.pushup.init();
     });
+
 }(jQuery));

@@ -14,6 +14,7 @@ There are quite a few small diferences between this script and the original "pus
 
 * Uses jQuery - duh; but this means smaller file, and easier to read.
 * Allows for changing min browser, want FireFox 2 uesrs to upgrade to 3? Just change @jQuery.pushup.browsers@.
+* HTML5 icon used [in place of Chrome icon](http://productforums.google.com/forum/#!topic/chrome/z70dwMeGCg4).
 
 ## Options
 
