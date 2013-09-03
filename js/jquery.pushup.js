@@ -1,4 +1,4 @@
-/* 
+/*! 
  * Original Copyright
  * 
  * Pushup
@@ -8,14 +8,12 @@
  * Website: http://www.pushuptheweb.com
  * Modified for jQuery by Stuart Loxton (www.stuartloxton.com)
  * 
- * * Modified for chrome version detection by Chris Keen (zedd45 at github)
- *   - TODO: refactor has.js / $.support for feature detection vs browser sniffing
+ * Modified for chrome version detection by Chris Keen (zedd45 at github)
  * 
  * Browser Detection Logic adapted from jQuery Migrate - v1.2.1 - 2013-05-08
  * https://github.com/jquery/jquery-migrate
  * Copyright 2005, 2013 jQuery Foundation, Inc. and other contributors; Licensed MIT
  */
-
 
 (function ($) {
     
@@ -55,9 +53,9 @@
 		var ua = navigator.userAgent.toLowerCase(),
 			match;
 
-		match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+		match = /(opr)[ \/]([\w.]+)/.exec( ua ) ||
+			/(chrome)[ \/]([\w.]+)/.exec( ua ) ||
 			/(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-			/(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
 			/(msie) ([\w.]+)/.exec( ua ) ||
 			/(firefox)[ \/]([\w.]+)/.exec( ua ) ||
 			[];
@@ -75,7 +73,6 @@
 	    safari: false,
 		chrome: false
 	};
-
 
 
 	// plugin starts here.
@@ -105,11 +102,11 @@
 	
 		// min supported version defaults.
 	    browsers: {
-		    firefox: 3,
-		    msie: 9,
-		    opera: 15,
-		    safari: 5,
-			chrome: 20
+		    firefox: 16,
+		    msie: 10,
+		    opr: 16,
+		    safari: 6,
+			chrome: 29
 	    },
 	
 		init: function () {
@@ -117,6 +114,9 @@
 			var currentBrowser = $.pushup.currentBrowser = uaMatch( navigator.userAgent );
 			
 			if ( currentBrowser ) {
+				// make the UA for opera more readable.  
+				// TODO: implement browser map so we don't have to keep changing code / paths when UA name / match changes.
+				currentBrowser.browser = currentBrowser.browser === "opr" ? "opera" : currentBrowser.browser;
 				// we don't care about the point release; comparing major version numbers only
 				browserVersion[ currentBrowser.browser ] = parseInt( currentBrowser.version ) || false;
 			}
