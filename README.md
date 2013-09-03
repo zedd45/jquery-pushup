@@ -26,7 +26,8 @@ To change the options open up `js/jquery.pushup.js` where the beginning of the f
 * `message`: The update message users will see when their browser needs an update.
 * `reminder.hours`: Time in hours used when clicked on the reminder message.
 * `reminder.message`: The reminder message, `#{hours}` will be replaced by reminder.hours.
-* *Bonus* `jQuery.pushup.browsers` is an easier way to change minimum browser versions.
+* *Bonus* `jQuery.pushup.browsers` is an easier way to change minimum browser versions.  
+* *NOTE:* The Browser names are all lower case as of 1.2.0
 
 ## Functions
 

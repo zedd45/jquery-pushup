@@ -7,13 +7,20 @@
  * License: MIT-style license.
  * Website: http://www.pushuptheweb.com
  * Modified for jQuery by Stuart Loxton (www.stuartloxton.com)
- * Modified for chrome version detection by Chris Keen (zedd45 at github)
+ * 
+ * * Modified for chrome version detection by Chris Keen (zedd45 at github)
  *   - TODO: refactor has.js / $.support for feature detection vs browser sniffing
+ * 
+ * Browser Detection Logic adapted from jQuery Migrate - v1.2.1 - 2013-05-08
+ * https://github.com/jquery/jquery-migrate
+ * Copyright 2005, 2013 jQuery Foundation, Inc. and other contributors; Licensed MIT
  */
 
 
 (function ($) {
-    // Cookie plugin based on the work of Peter-Paul Koch - http://www.quirksmode.org
+    
+	// Cookie plugin based on the work of Peter-Paul Koch - http://www.quirksmode.org
+	// TODO: augment w/ local storage, where available? 
     var Cookie = {
         set: function (name, value) {
             var expires = '', options = arguments[2] || {}, date;
@@ -44,11 +51,41 @@
         }
     };
 
+	var uaMatch = function() {
+		var ua = navigator.userAgent.toLowerCase(),
+			match;
+
+		match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+			/(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+			/(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+			/(msie) ([\w.]+)/.exec( ua ) ||
+			/(firefox)[ \/]([\w.]+)/.exec( ua ) ||
+			[];
+
+		return {
+			browser: match[ 1 ] || "",
+			version: match[ 2 ] || "0"
+		};
+	};
+	
+	var browserVersion = {
+		firefox: false,
+	    msie: false,
+	    opera: false,
+	    safari: false,
+		chrome: false
+	};
+
+
+
+	// plugin starts here.
+	
     $.pushup = {
-	    Version: '1.1.0',
+	    Version: '1.2.0',
+		UA: navigator.userAgent,
 	    options: {
 		    appearDelay: 0.5,
-		    fadeDelay: 6,
+		    fadeDelay: 30,
 		    images: '../images/pushup/',
 		    message: 'Important browser update available',
 		    reminder: {
@@ -57,38 +94,47 @@
 		    }
 	    },
 	    activeBrowser: null,
-	    updateLinks: {
-		    IE: 'http://www.microsoft.com/windows/downloads/ie/',
-		    Firefox: 'http://www.getfirefox.com',
-		    Safari: 'http://www.apple.com/safari/download/',
-		    Opera: 'http://www.opera.com/download/',
-			Chrome: 'http://www.google.com/chrome'
+	    
+		updateLinks: {
+		    msie: 'http://www.microsoft.com/windows/downloads/ie/',
+		    firefox: 'http://www.getfirefox.com',
+		    safari: 'http://www.apple.com/safari/download/',
+		    opera: 'http://www.opera.com/download/',
+			chrome: 'http://www.google.com/chrome'
 	    },
-	    browsVer: {
-		    Firefox: ($.browser.mozilla) || (navigator.userAgent.indexOf('Firefox') != -1) ? parseFloat($.browser.version) || parseFloat(navigator.userAgent.match(/Firefox[\/\s](\d+)/)[1]) : false,
-		    IE: ($.browser.msie) ? parseFloat($.browser.version) : false,
-		    Safari: ($.browser.safari) ? parseFloat($.browser.version) : false,
-		    Opera: ($.browser.opera) ? parseFloat($.browser.version) : false,
-		    Chrome: ($.browser.chrome) ? parseFloat($.browser.version) : false
-	    },
+	
+		// min supported version defaults.
 	    browsers: {
-		    Firefox: 3,
-		    IE: 9,
-		    Opera: 15,
-		    Safari: 5,
-			Chrome: 20
+		    firefox: 3,
+		    msie: 9,
+		    opera: 15,
+		    safari: 5,
+			chrome: 20
 	    },
-	    init: function () {
-		    $.each($.pushup.browsVer, function (i, browserVersion) {
-			    if (browserVersion && browserVersion < $.pushup.browsers[i]) {
-				    $.pushup.activeBrowser = i;
-				    if (!$.pushup.options.ignoreReminder && $.pushup.cookiesEnabled && Cookie.get('_pushupBlocked')) { 
+	
+		init: function () {
+			
+			var currentBrowser = $.pushup.currentBrowser = uaMatch( navigator.userAgent );
+			
+			if ( currentBrowser ) {
+				// we don't care about the point release; comparing major version numbers only
+				browserVersion[ currentBrowser.browser ] = parseInt( currentBrowser.version ) || false;
+			}
+						
+			$.each( browserVersion, function ( uaString, version ) {
+				
+				if ( "number" === typeof version && version < $.pushup.browsers[uaString]) {
+				    
+					$.pushup.activeBrowser = uaString;
+				    
+					if (!$.pushup.options.ignoreReminder && $.pushup.cookiesEnabled && Cookie.get('_pushupBlocked')) { 
 				        return; 
 				    } else {
 					    var time = ($.pushup.options.appearDelay !== undefined) ? $.pushup.options.appearDelay * 1000 : 0;
 					    setTimeout($.pushup.show, time);
 				    }
 			    }
+			
 		    });
 	    },
 	    show: function () {
@@ -139,7 +185,7 @@
 			    });
 		    }
 		    image = imgSrc + $.pushup.activeBrowser.toLowerCase();
-		    styles = ($.pushup.browsVer.IE < 7 && $.pushup.browsVer.IE) ? {
+		    styles = ($.pushup.currentBrowser.msie) ? {
 			    filter: 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' + image + '.png\'\', sizingMethod=\'crop\')'
 		    } : {
 			    background: 'url(' + image + '.png) no-repeat top left'
