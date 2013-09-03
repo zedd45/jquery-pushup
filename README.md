@@ -45,3 +45,5 @@ If you don't want to have the `jQuery.pushup.init()` called on DOM ready then re
 
  * Refactor more and reduce bloat.
  * Setup options for `show()`
+ * refactor in has.js / $.support for feature detection vs browser sniffing.
+ * add browser map / hash so names are standardized.
